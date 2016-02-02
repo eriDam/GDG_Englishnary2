@@ -53,6 +53,7 @@ public class DefinitionFragment extends Fragment {
         inflater.inflate(R.menu.menu_definition_fragment, menu);
 
 
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -71,7 +72,7 @@ public class DefinitionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.list_item_definitions, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         buscar = (Button)rootView.findViewById(R.id.btnBuscar);
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
