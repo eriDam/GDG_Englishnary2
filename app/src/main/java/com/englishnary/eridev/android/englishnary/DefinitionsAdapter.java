@@ -32,7 +32,8 @@ public class DefinitionsAdapter extends ArrayAdapter<Definitions> {
         if (null == convertView) {
             //Si no existe, entonces inflarlo
             v = inflater.inflate(
-                    R.layout.list_item_definitions,
+                   R.layout.list_item_definitions,
+                    // R.layout.listview_definitions,
                     parent,
                     false);
         }
@@ -52,14 +53,5 @@ public class DefinitionsAdapter extends ArrayAdapter<Definitions> {
 
     }
 
-    /*
-     * Este método nos permite obtener el Id de un drawable a través
-     * de su nombre
-     */
-    private int convertirRutaEnId(String nombre){
-        Context context = getContext();
-        return context.getResources()
-                .getIdentifier(nombre, "drawable", context.getPackageName());
-    }
 }
 

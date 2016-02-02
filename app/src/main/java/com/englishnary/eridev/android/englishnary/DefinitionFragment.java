@@ -1,5 +1,7 @@
 package com.englishnary.eridev.android.englishnary;
 //http://www.hermosaprogramacion.com/2015/01/android-json-parsing/
+
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,8 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,6 +33,9 @@ public class DefinitionFragment extends Fragment {
     private static final int DEFINITIONS_LOADER = 0;
     ArrayAdapter<String> mDefinitionsAdapter;
     ListView lista;
+    Button buscar;
+    FetchDefinitionTask definitionTask;
+
     public DefinitionFragment() {
     }
 
@@ -39,6 +43,7 @@ public class DefinitionFragment extends Fragment {
                 super.onCreate(savedInstanceState);
                 // Add this line in order for this fragment to handle menu events.
                         setHasOptionsMenu(true);
+
 
         }
 
@@ -55,7 +60,7 @@ public class DefinitionFragment extends Fragment {
         int id = item.getItemId();
             //Toast.makeText(DefinitionFragment.this, "Awesome you are pushed button ok", Toast.LENGTH_SHORT).show();
             if (id == R.id.action_refresh) {
-                FetchDefinitionTask definitionTask = new FetchDefinitionTask();
+                definitionTask = new FetchDefinitionTask();
                 definitionTask.execute();
                 return true;
         }
@@ -66,29 +71,15 @@ public class DefinitionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //return inflater.inflate(R.layout.fragment_main, container, false);
-        //lista = (ListView) findViewById(R.id.listview_definitions);
-        //Inflate root fragment
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        // Create data for the ListView.
-        String[] wordsArray = {
-                "Access", "Account", "Activity", "Administrative", "Advantage",
-                "Advertisements", "Animate", "Applications", "Art", "Attachment",
-                "Audience", "Admin",
-                "Back up", "Bandwidth", "Banner", "Basics", "Benefit", "Blog", "Blue tooth",
-                "Bookmarks", "Boot up", "Broadband", "Browser", "Bugs", "Bytes"
-        };
-
-        List<String> categoryDefinitions = new ArrayList<String>(Arrays.asList(wordsArray));
-//
-//        // use it to fill the ListView it's attached to.
-         ArrayAdapter mDefinitionsAdapter = new ArrayAdapter<String>(
-//                //The actual context "this"
-                 getActivity(),
-                 R.layout.list_item_definitions, // The name of the layout ID.
-                 R.id.list_item_definitions_text, // The ID of the textview to fill.
-                 categoryDefinitions);
+        View rootView = inflater.inflate(R.layout.list_item_definitions, container, false);
+        buscar = (Button)rootView.findViewById(R.id.btnBuscar);
+        buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                definitionTask = new FetchDefinitionTask();
+                definitionTask.execute();
+            }
+        });
 
         //Get references to the list view and connect adapter
         ListView listViewDef = (ListView) rootView.findViewById(
@@ -96,6 +87,31 @@ public class DefinitionFragment extends Fragment {
         listViewDef.setAdapter(mDefinitionsAdapter);
         Log.v(LOG_TAG, "listViewDef is inflate" + listViewDef.toString());
         return rootView;
+        //return inflater.inflate(R.layout.fragment_main, container, false);
+        //lista = (ListView) findViewById(R.id.listview_definitions);
+        //Inflate root fragment    fragment_main
+
+
+        // Create data for the ListView.
+//        String[] wordsArray = {
+//                "Access", "Account", "Activity", "Administrative", "Advantage",
+//                "Advertisements", "Animate", "Applications", "Art", "Attachment",
+//                "Audience", "Admin",
+//                "Back up", "Bandwidth", "Banner", "Basics", "Benefit", "Blog", "Blue tooth",
+//                "Bookmarks", "Boot up", "Broadband", "Browser", "Bugs", "Bytes"
+//        };
+
+       // List<String> categoryDefinitions = new ArrayList<String>(Arrays.asList(wordsArray));
+//
+//        // use it to fill the ListView it's attached to.
+//         ArrayAdapter mDefinitionsAdapter = new ArrayAdapter<String>(
+////                //The actual context "this"
+//                 getActivity(),
+//                 R.layout.list_item_definitions, // The name of the layout ID.
+//                 R.id.list_item_definitions_text, // The ID of the textview to fill.
+//                 categoryDefinitions);
+
+
          }
 
 
@@ -108,9 +124,14 @@ public class DefinitionFragment extends Fragment {
          class FetchDefinitionTask extends AsyncTask<Void, Void, Void> {
 
             private final String LOG_TAG = FetchDefinitionTask.class.getSimpleName();
+            ProgressDialog progressDialog;
+             @Override
+             protected void onPreExecute() {
+                 super.onPreExecute();
+                // progressDialog = ProgressDialog.show(context, "Por favor espere", "Procesando...");
+             }
 
-
-            @Override
+             @Override
             protected Void doInBackground(Void... params) {
 
                 // These two need to be declared outside the try/catch
@@ -195,6 +216,7 @@ public class DefinitionFragment extends Fragment {
                      lista.setAdapter(adaptador);
                      Log.v(LOG_TAG, "definitions Json Str" + definitions);
                      definitions.toString();
+
                  }else{
                      Toast.makeText(
                              getContext(),
@@ -207,4 +229,5 @@ public class DefinitionFragment extends Fragment {
 
         }
 }
+
 
